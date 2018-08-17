@@ -9,7 +9,7 @@ cache:
 
 before_script:
 # Install PHP extensions
-- docker-php-ext-install mbstring mcrypt pdo_pgsql curl json intl gd xml zip bz2 opcache
+- docker-php-ext-install mbstring curl json intl gd xml zip bz2 opcache
 # Install & enable Xdebug for code coverage reports
 - pecl install xdebug
 - docker-php-ext-enable xdebug
