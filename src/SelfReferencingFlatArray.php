@@ -1,6 +1,6 @@
 <?php
-/* FlatArray | https://gitlab.com/byjoby/flatarray | MIT License */
-namespace FlatArray;
+/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+namespace Flatrr;
 
 class SelfReferencingFlatArray extends FlatArray
 {

@@ -12,12 +12,12 @@
     },
     "autoload": {
         "psr-4": {
-            "FlatArray\\": "src/"
+            "Flatrr\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "FlatArray\\": "tests/"
+            "Flatrr\\": "tests/"
         }
     },
     "scripts": {

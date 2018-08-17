@@ -1,6 +1,6 @@
 <?php
-/* FlatArray | https://gitlab.com/byjoby/flatarray | MIT License */
-namespace FlatArray\Config;
+/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+namespace Flatrr\Config;
 
 interface ConfigInterface extends \ArrayAccess
 {

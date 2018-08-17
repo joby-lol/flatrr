@@ -1,8 +1,8 @@
-# flatarray
+# Flatrr
 
-## What flatarray does
+## What Flatrr does
 
-Flatarray is a utility library for accessing arrays via flattened key names. So, for example, rather than using `$arr['foo']['bar']` you could use `$arr['foo.bar']`. Mostly this is useful if you want to use string building to make the keys you're going to use to access an array.
+Flatrr is a utility library for accessing arrays via flattened key names. So, for example, rather than using `$arr['foo']['bar']` you could use `$arr['foo.bar']`. Mostly this is useful if you want to use string building to make the keys you're going to use to access an array.
 
 It should be noted that because of the way arrays and references work, this is not going to work *exactly* the same way as a native array in all cases. There are actually countless tiny caveats, and with that in mind you should generally stick to using this library as it is documented. Using undocumented features is exceptionally unpredictable due to the nature of this tool, and things may work radically different under the hood in the future.
 
@@ -16,7 +16,7 @@ The main FlatArray class is very simple. It only implements \Array and \Iterator
 // Instantiating FlatArrays can be done by passing them an array
 // Keys in the initial array will be unflattened, for example the following
 // yields a FlatArray containing ['foo'=>'bar','bar'=>['baz'=>'a','buz'=>'u']]
-$f = new \FlatArray\FlatArray([
+$f = new \Flatrr\FlatArray([
   'foo' => 'bar',
   'bar.baz' => 'a',
   'bar.buz' => 'u'
@@ -49,7 +49,7 @@ $f['foo']['bar'] = 'baz';
 SelfReferencingFlatArray is a class that does everything FlatArray does, but also allows strings within the array to reference other fields within the array, and include them as strings. For example:
 
 ```php
-$f = new \FlatArray\SelfReferencingFlatArray([
+$f = new \Flatrr\SelfReferencingFlatArray([
   'foo.bar' => 'baz',
   'foo.baz' => '${foo.bar}'
 ]);
