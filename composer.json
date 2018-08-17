@@ -1,0 +1,31 @@
+{
+    "name": "byjoby/flatarray",
+    "description": "A library for working with multi-dimensional arrays through flattened keys",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{
+        "name": "Joby Elliott",
+        "email": "joby@byjoby.com"
+    }],
+    "require-dev": {
+        "phpunit/phpunit": "^7.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "FlatArray\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FlatArray\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "phpunit"
+        ]
+    },
+    "require": {
+        "symfony/yaml": "^3.4"
+    }
+}
