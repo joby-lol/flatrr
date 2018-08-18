@@ -1,10 +1,10 @@
 <?php
-/* FlatArray | https://gitlab.com/byjoby/flatarray | MIT License */
-namespace FlatArray\Config;
+/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+namespace Flatrr\Config;
 
 use Symfony\Component\Yaml\Yaml;
-use FlatArray\SelfReferencingFlatArray;
-use FlatArray\FlatArray;
+use Flatrr\SelfReferencingFlatArray;
+use Flatrr\FlatArray;
 
 class Config extends SelfReferencingFlatArray implements ConfigInterface
 {

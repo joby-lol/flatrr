@@ -1,7 +1,7 @@
 <?php
-/* FlatArray | https://gitlab.com/byjoby/flatarray | MIT License */
+/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
 declare(strict_types=1);
-namespace FlatArray\Config;
+namespace Flatrr\Config;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;

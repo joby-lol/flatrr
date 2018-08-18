@@ -1,7 +1,7 @@
 <?php
-/* FlatArray | https://gitlab.com/byjoby/flatarray | MIT License */
+/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
 declare(strict_types=1);
-namespace FlatArray;
+namespace Flatrr;
 
 use PHPUnit\Framework\TestCase;
 
