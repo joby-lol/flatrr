@@ -4,7 +4,6 @@ namespace Flatrr;
 
 interface FlatArrayInterface extends \ArrayAccess, \Iterator
 {
-    public function __construct(array $data = null);
     public function set(?string $name, $value);
     public function get(?string $name = null);
     public function unset(?string $name);
