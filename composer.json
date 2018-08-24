@@ -1,31 +1,32 @@
 {
-    "name": "byjoby/flatrr",
-    "description": "A library for working with multi-dimensional arrays through flattened keys",
-    "type": "library",
-    "license": "MIT",
-    "authors": [{
-        "name": "Joby Elliott",
-        "email": "joby@byjoby.com"
-    }],
-    "require-dev": {
-        "phpunit/phpunit": "^7.3"
-    },
-    "autoload": {
-        "psr-4": {
-            "Flatrr\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Flatrr\\": "tests/"
-        }
-    },
-    "scripts": {
-        "test": [
-            "phpunit"
-        ]
-    },
-    "require": {
-        "symfony/yaml": "^3.4"
+  "name": "byjoby/flatrr",
+  "description": "A library for working with multi-dimensional arrays through flattened keys",
+  "type": "library",
+  "license": "MIT",
+  "authors": [{
+    "name": "Joby Elliott",
+    "email": "joby@byjoby.com"
+  }],
+  "require-dev": {
+    "phpunit/phpunit": "^7.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Flatrr\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Flatrr\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": [
+      "phpunit"
+    ]
+  },
+  "require": {
+    "php": ">=7.1",
+    "symfony/yaml": "^3.4"
+  }
 }
