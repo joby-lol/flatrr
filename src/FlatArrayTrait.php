@@ -204,7 +204,7 @@ trait FlatArrayTrait
         }
         $norm = [];
         foreach ($value as $key => $value) {
-            $nKey = preg_replace('/[^a-z0-9\-\_]/', '', strtolower($key));
+            $nKey = preg_replace('/\./', '', strtolower($key));
             if ($nKey == '') {
                 throw new \Exception("Key \"$key\" can't be used inside a FlatArray");
             }
