@@ -145,7 +145,7 @@ trait FlatArrayTrait
     {
         //normalize key names in $value, and also $name
         $value = $this->normalizeValue($value);
-        $name = preg_replace('/[^a-z0-9\-\_\.]/', '', strtolower($name));
+        $name = preg_replace('/\./', '', strtolower($name));
         //check for home strings
         if ($name == '' || $name === null) {
             if ($unset) {
