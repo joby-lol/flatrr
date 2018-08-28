@@ -145,7 +145,7 @@ trait FlatArrayTrait
     {
         //normalize key names in $value, and also $name
         $value = $this->normalizeValue($value);
-        $name = preg_replace('/\./', '', strtolower($name));
+        $name = strtolower($name);
         //check for home strings
         if ($name == '' || $name === null) {
             if ($unset) {
