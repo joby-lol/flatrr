@@ -11,6 +11,6 @@ interface FlatArrayInterface extends \ArrayAccess, \Iterator
 
     public function push(?string $name, $value);
     public function pop(?string $name);
-    public function shift(?string $name, $value);
-    public function unshift(?string $name);
+    public function unshift(?string $name, $value);
+    public function shift(?string $name);
 }
