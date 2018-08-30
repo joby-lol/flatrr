@@ -22,12 +22,12 @@ class FlatArrayPushPopTest extends TestCase
     public function testShiftUnshift()
     {
         $f = new FlatArray();
-        $f->shift(null, 'foo');
-        $f->shift(null, 'bar');
+        $f->unshift(null, 'foo');
+        $f->unshift(null, 'bar');
         $this->assertEquals(['bar','foo'], $f->get());
-        $this->assertEquals('bar', $f->unshift(null));
+        $this->assertEquals('bar', $f->shift(null));
         $this->assertEquals(['foo'], $f->get());
-        $this->assertEquals('foo', $f->unshift(null));
+        $this->assertEquals('foo', $f->shift(null));
         $this->assertEquals([], $f->get());
     }
 }
