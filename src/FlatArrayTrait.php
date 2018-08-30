@@ -27,7 +27,7 @@ trait FlatArrayTrait
         return $out;
     }
 
-    public function shift(?string $name, $value)
+    public function unshift(?string $name, $value)
     {
         $arr = $this->get($name);
         if ($arr !== null && !is_array($arr)) {
@@ -37,7 +37,7 @@ trait FlatArrayTrait
         $this->set($name, $arr);
     }
 
-    public function unshift(?string $name)
+    public function shift(?string $name)
     {
         $arr = $this->get($name);
         if ($arr !== null && !is_array($arr)) {
