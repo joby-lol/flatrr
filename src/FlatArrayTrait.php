@@ -12,6 +12,9 @@ trait FlatArrayTrait
         if ($arr !== null && !is_array($arr)) {
             return;
         }
+        if ($arr === null) {
+            $arr = [];
+        }
         $arr[] = $value;
         $this->set($name, $arr);
     }
