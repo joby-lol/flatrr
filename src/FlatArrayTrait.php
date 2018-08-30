@@ -33,6 +33,9 @@ trait FlatArrayTrait
         if ($arr !== null && !is_array($arr)) {
             return;
         }
+        if ($arr === null) {
+            $arr = [];
+        }
         array_unshift($arr, $value);
         $this->set($name, $arr);
     }
