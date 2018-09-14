@@ -89,19 +89,13 @@ class FlatArrayTest extends TestCase
         );
     }
 
-    public function testCaseNormalizing()
+    public function testCaseSensitivity()
     {
         $h = new FlatArray([
             'ABC'=>['ABC'=>'ABC']
         ]);
-        $this->assertEquals('ABC', $h['abc.abc']);
-        $this->assertEquals('ABC', $h['Abc.aBC']);
-        $h['Abc.aBC'] = 'abc';
-        $this->assertEquals('abc', $h['abc.abc']);
-        $this->assertEquals('abc', $h['Abc.aBC']);
-        $h['ABC'] = ['ABC'=>'ABC'];
-        $this->assertEquals('ABC', $h['abc.abc']);
-        $this->assertEquals('ABC', $h['Abc.aBC']);
+        $this->assertNull($h['abc.abc']);
+        $this->assertNull($h['Abc.aBC']);
     }
 
     public function testAccidentalSubstrings()

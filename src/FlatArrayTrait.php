@@ -151,7 +151,7 @@ trait FlatArrayTrait
     {
         //normalize key names in $value, and also $name
         $value = $this->normalizeValue($value);
-        $name = strtolower($name);
+        $name = $name;
         //check for home strings
         if ($name == '' || $name === null) {
             if ($unset) {
@@ -210,7 +210,7 @@ trait FlatArrayTrait
         }
         $norm = [];
         foreach ($value as $key => $value) {
-            $nKey = preg_replace('/\./', '', strtolower($key));
+            $nKey = preg_replace('/\./', '', $key);
             if ($nKey == '') {
                 throw new \Exception("Key \"$key\" can't be used inside a FlatArray");
             }
