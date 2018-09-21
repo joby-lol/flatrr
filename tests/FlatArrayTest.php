@@ -89,6 +89,19 @@ class FlatArrayTest extends TestCase
         );
     }
 
+    public function testSettingFalseyValues()
+    {
+        $a = new FlatArray(['foo'=>['bar'=>'baz']]);
+        $a['foo.bar'] = false;
+        $this->assertFalse($a['foo.bar']);
+        $a['foo.bar'] = 0;
+        $this->assertEquals(0, $a['foo.bar']);
+        $a['foo.bar'] = '';
+        $this->assertEquals('', $a['foo.bar']);
+        $a['foo.bar'] = [];
+        $this->assertEquals([], $a['foo.bar']);
+    }
+
     public function testCaseSensitivity()
     {
         $h = new FlatArray([
