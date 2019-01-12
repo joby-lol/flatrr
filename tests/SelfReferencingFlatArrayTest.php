@@ -50,4 +50,30 @@ class SelfReferencingFlatArrayTest extends TestCase
         $this->assertEquals('${foo}', $f['nested.escaped.left']);
         $this->assertEquals('${foo}', $f['nested.escaped.right']);
     }
+
+    public function testSettingFalseyValues()
+    {
+        $a = new SelfReferencingFlatArray(['foo'=>['bar'=>'baz']]);
+        $a['foo.bar'] = false;
+        $this->assertFalse($a['foo.bar']);
+        $a['foo.bar'] = 0;
+        $this->assertSame(0, $a['foo.bar']);
+        $a['foo.bar'] = '';
+        $this->assertSame('', $a['foo.bar']);
+        $a['foo.bar'] = [];
+        $this->assertSame([], $a['foo.bar']);
+    }
+
+    public function testMerginFalseyValues()
+    {
+        $a = new SelfReferencingFlatArray(['foo'=>['bar'=>'baz']]);
+        $a->merge(['foo'=>['bar'=>false]], null, true);
+        $this->assertFalse($a['foo.bar']);
+        $a->merge(['foo'=>['bar'=>0]], null, true);
+        $this->assertSame(0, $a['foo.bar']);
+        $a->merge(['foo'=>['bar'=>'']], null, true);
+        $this->assertSame('', $a['foo.bar']);
+        $a->merge(['foo'=>['bar'=>[]]], null, true);
+        $this->assertSame([], $a['foo.bar']);
+    }
 }

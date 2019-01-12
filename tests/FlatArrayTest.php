@@ -95,11 +95,24 @@ class FlatArrayTest extends TestCase
         $a['foo.bar'] = false;
         $this->assertFalse($a['foo.bar']);
         $a['foo.bar'] = 0;
-        $this->assertEquals(0, $a['foo.bar']);
+        $this->assertSame(0, $a['foo.bar']);
         $a['foo.bar'] = '';
-        $this->assertEquals('', $a['foo.bar']);
+        $this->assertSame('', $a['foo.bar']);
         $a['foo.bar'] = [];
-        $this->assertEquals([], $a['foo.bar']);
+        $this->assertSame([], $a['foo.bar']);
+    }
+
+    public function testMerginFalseyValues()
+    {
+        $a = new FlatArray(['foo'=>['bar'=>'baz']]);
+        $a->merge(['foo'=>['bar'=>false]], null, true);
+        $this->assertFalse($a['foo.bar']);
+        $a->merge(['foo'=>['bar'=>0]], null, true);
+        $this->assertSame(0, $a['foo.bar']);
+        $a->merge(['foo'=>['bar'=>'']], null, true);
+        $this->assertSame('', $a['foo.bar']);
+        $a->merge(['foo'=>['bar'=>[]]], null, true);
+        $this->assertSame([], $a['foo.bar']);
     }
 
     public function testCaseSensitivity()
