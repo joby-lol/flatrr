@@ -5,9 +5,23 @@ namespace Flatrr;
 trait FlatArrayTrait
 {
     private $_arrayData = array();
+    private $_locked = false;
+
+    public function lock()
+    {
+        $this->_locked = true;
+    }
+
+    public function unlock()
+    {
+        $this->_locked = false;
+    }
 
     public function push(?string $name, $value)
     {
+        if ($this->_locked) {
+            return null;
+        }
         $arr = $this->get($name);
         if ($arr !== null && !is_array($arr)) {
             return;
@@ -21,6 +35,9 @@ trait FlatArrayTrait
 
     public function pop(?string $name)
     {
+        if ($this->_locked) {
+            return null;
+        }
         $arr = $this->get($name);
         if ($arr !== null && !is_array($arr)) {
             return;
@@ -32,6 +49,9 @@ trait FlatArrayTrait
 
     public function unshift(?string $name, $value)
     {
+        if ($this->_locked) {
+            return null;
+        }
         $arr = $this->get($name);
         if ($arr !== null && !is_array($arr)) {
             return;
@@ -45,6 +65,9 @@ trait FlatArrayTrait
 
     public function shift(?string $name)
     {
+        if ($this->_locked) {
+            return null;
+        }
         $arr = $this->get($name);
         if ($arr !== null && !is_array($arr)) {
             return;
@@ -56,6 +79,9 @@ trait FlatArrayTrait
 
     public function set(?string $name, $value)
     {
+        if ($this->_locked) {
+            return $this->get($name);
+        }
         return $this->flattenSearch($name, $value);
     }
 
@@ -66,6 +92,9 @@ trait FlatArrayTrait
 
     public function unset(?string $name)
     {
+        if ($this->_locked) {
+            return null;
+        }
         $this->flattenSearch($name, null, true);
     }
 
@@ -120,6 +149,9 @@ trait FlatArrayTrait
      */
     public function merge($value, string $name = null, bool $overwrite = false)
     {
+        if ($this->_locked) {
+            return null;
+        }
         if (!isset($this[$name])) {
             //easiest possible outcome, old value doesn't exist, so we can just write the value
             $this->set($name, $value);
