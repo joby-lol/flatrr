@@ -27,6 +27,6 @@
   },
   "require": {
     "php": ">=7.1",
-    "symfony/yaml": "^3.4"
+    "symfony/yaml": "^4.4"
   }
 }
