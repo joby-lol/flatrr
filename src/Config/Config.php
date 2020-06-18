@@ -8,6 +8,23 @@ use Flatrr\FlatArray;
 
 class Config extends SelfReferencingFlatArray implements ConfigInterface
 {
+    public function readDir($dir, string $name = null, bool $overwrite = null)
+    {
+        $dir = realpath($dir);
+        if (!$dir || !is_dir($dir)) {
+            return;
+        }
+        foreach (glob("$dir/*") as $f) {
+            if (is_file($f)) {
+                try {
+                    $this->readFile($f, $name, $overwrite);
+                } catch (\Throwable $th) {
+                    //ignore exceptions
+                }
+            }
+        }
+    }
+
     protected function parse(string $input, string $format) : array
     {
         $fn = 'parse_'.$format;
