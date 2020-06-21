@@ -9,7 +9,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
 {
     public $strict = false;
 
-    public function readDir($dir, string $name = null, bool $overwrite = null)
+    public function readDir($dir, string $name = null, bool $overwrite = false)
     {
         $dir = realpath($dir);
         if (!$dir || !is_dir($dir)) {
@@ -17,11 +17,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
         }
         foreach (glob("$dir/*") as $f) {
             if (is_file($f)) {
-                try {
-                    $this->readFile($f, $name, $overwrite);
-                } catch (\Throwable $th) {
-                    //ignore exceptions
-                }
+                $this->readFile($f, $name, $overwrite);
             }
         }
     }
