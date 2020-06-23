@@ -1,5 +1,7 @@
 # Flatrr
 
+[![Build Status](https://travis-ci.org/jobyone/flatrr.svg?branch=main)](https://travis-ci.org/jobyone/flatrr)
+
 ## What Flatrr does
 
 Flatrr is a utility library for accessing arrays via flattened key names. So, for example, rather than using `$arr['foo']['bar']` you could use `$arr['foo.bar']`. Mostly this is useful if you want to use string building to make the keys you're going to use to access an array.
