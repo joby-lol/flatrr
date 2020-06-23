@@ -17,30 +17,65 @@ class SelfReferencingFlatArray extends FlatArray
         return $out;
     }
 
+    public function set(?string $name, $value)
+    {
+        return $this->filter(parent::set($name,$value));
+    }
+
+    public function push(?string $name, $value)
+    {
+        return $this->filter(parent::push($name,$value));
+    }
+
+    public function pop(?string $name)
+    {
+        return $this->filter(parent::pop($name));
+    }
+
+    public function unshift(?string $name, $value)
+    {
+        return $this->filter(parent::unshift($name,$value));
+    }
+
+    public function shift(?string $name)
+    {
+        return $this->filter(parent::shift($name));
+    }
+
+    public function rewind()
+    {
+        return $this->filter(parent::rewind());
+    }
+
+    public function next()
+    {
+        return $this->filter(parent::next());
+    }
+
+    public function current()
+    {
+        return $this->filter(parent::current());
+    }
+
     protected function unescape($value)
     {
-        if ($value === null) {
-            return null;
+        //map this function onto array values
+        if (is_array($value)) {
+            return array_map(
+                [$this, 'unescape'],
+                $value
+            );
         }
         //search/replace on string values
         if (is_string($value)) {
             //unescape references
             $value = preg_replace(
-                '/\$\\\?\{([^\}\\\]+)\\\?\}/',
+                '/\$\\\?\{([^\}\\\]+)\\\?\}/S',
                 '\${$1}',
                 $value
             );
             //return
             return $value;
-        }
-        //map this function onto array values
-        if (is_array($value)) {
-            return array_map(
-                function ($i) {
-                    return $this->filter($i);
-                },
-                $value
-            );
         }
         //fall back to just returning value, it's some other datatype
         return $value;
