@@ -1,9 +1,10 @@
 <?php
 /* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+
 namespace Flatrr\Config;
 
 use Flatrr\SelfReferencingFlatArray;
-use Symfony\Component\Yaml\Yaml;
+use Spyc;
 
 class Config extends SelfReferencingFlatArray implements ConfigInterface
 {
@@ -40,7 +41,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
 
     protected function parse_yaml($input)
     {
-        return Yaml::parse($input);
+        return Spyc::YAMLLoadString($input);
     }
 
     public function json($raw = false): string
@@ -50,7 +51,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
 
     public function yaml($raw = false): string
     {
-        return Yaml::dump($this->get(null, $raw), 10);
+        return Spyc::YAMLDump($this->get(null, $raw), 2);
     }
 
     protected function read_ini($filename)
@@ -65,7 +66,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
 
     protected function read_yaml($filename)
     {
-        return Yaml::parse(file_get_contents($filename));
+        return Spyc::YAMLLoad($filename);
     }
 
     protected function read_yml($filename)
