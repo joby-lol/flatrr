@@ -148,9 +148,7 @@ trait FlatArrayTrait
      */
     protected function flattenSearch(?string $name, $value = null, $unset = false)
     {
-        //normalize key names in $value, and also $name
-        $value = $this->normalizeValue($value);
-        $name = $name;
+
         //check for home strings
         if ($name == '' || $name === null) {
             if ($unset) {
@@ -200,21 +198,5 @@ trait FlatArrayTrait
             return null;
         }
         return @$parent[$key];
-    }
-
-    protected function normalizeValue($value)
-    {
-        if (!is_array($value)) {
-            return $value;
-        }
-        $norm = [];
-        foreach ($value as $key => $value) {
-            $nKey = preg_replace('/\./', '', $key);
-            if ($nKey == '') {
-                throw new \Exception("Key \"$key\" can't be used inside a FlatArray");
-            }
-            $norm[$nKey] = $this->normalizeValue($value);
-        }
-        return $norm;
     }
 }

@@ -1,9 +1,12 @@
 <?php
 /* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+
 namespace Flatrr;
 
 class SelfReferencingFlatArray extends FlatArray
 {
+    protected $cache = [];
+
     public function get(string $name = null, bool $raw = false, $unescape = true)
     {
         $out = parent::get($name);
@@ -19,12 +22,13 @@ class SelfReferencingFlatArray extends FlatArray
 
     public function set(?string $name, $value)
     {
-        return $this->filter(parent::set($name,$value));
+        $this->cache = [];
+        return $this->filter(parent::set($name, $value));
     }
 
     public function push(?string $name, $value)
     {
-        return $this->filter(parent::push($name,$value));
+        return $this->filter(parent::push($name, $value));
     }
 
     public function pop(?string $name)
@@ -34,7 +38,7 @@ class SelfReferencingFlatArray extends FlatArray
 
     public function unshift(?string $name, $value)
     {
-        return $this->filter(parent::unshift($name,$value));
+        return $this->filter(parent::unshift($name, $value));
     }
 
     public function shift(?string $name)
@@ -96,14 +100,15 @@ class SelfReferencingFlatArray extends FlatArray
         //search/replace on string values
         if (is_string($value) && strpos($value, '${') !== false) {
             //search for valid replacements
-            return preg_replace_callback(
-                //search for things like ${var/name}, escape with \ before last brace
-                '/\$\{([^\}]*[^\.\\\])\}/S',
-                //replace match with value from $this if it exists
-                [$this, 'filter_regex'],
-                //applied to $value
-                $value
-            );
+            return $this->cache[$value] ??
+                ($this->cache[$value] = preg_replace_callback(
+                    //search for things like ${var/name}, escape with \ before last brace
+                    '/\$\{([^\}]*[^\.\\\])\}/',
+                    //replace match with value from $this if it exists
+                    [$this, 'filter_regex'],
+                    //applied to $value
+                    $value
+                ));
         }
         //fall back to just returning value, it's some other datatype
         return $value;
