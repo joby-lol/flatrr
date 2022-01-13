@@ -1,10 +1,12 @@
 <?php
 /* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+
 namespace Flatrr;
 
 trait FlatArrayTrait
 {
     private $_arrayData = array();
+    private $_flattenCache = array();
 
     public function push(?string $name, $value)
     {
@@ -64,7 +66,8 @@ trait FlatArrayTrait
         return $this->flattenSearch($name);
     }
 
-    function unset(?string $name) {
+    function unset(?string $name)
+    {
         $this->flattenSearch($name, null, true);
     }
 
@@ -148,7 +151,17 @@ trait FlatArrayTrait
      */
     protected function flattenSearch(?string $name, $value = null, $unset = false)
     {
+        if ($value !== null || $unset) {
+            $this->_flattenCache = array();
+        }
+        if (!isset($this->_flattenCache[$name])) {
+            $this->_flattenCache[$name] = $this->doFlattenSearch($name, $value, $unset);
+        }
+        return $this->_flattenCache[$name];
+    }
 
+    protected function doFlattenSearch(?string $name, $value = null, $unset = false)
+    {
         //check for home strings
         if ($name == '' || $name === null) {
             if ($unset) {
@@ -158,23 +171,24 @@ trait FlatArrayTrait
             }
             return $this->_arrayData;
         }
-        //validate
-        if (substr($name, -1, 1) == '.' || substr($name, 0, 1) == '..' || strpos($name, '..') !== false) {
-            return null;
-        }
         //build a reference to where this name should be
         $parent = &$this->_arrayData;
         $name = explode('.', $name);
         $key = array_pop($name);
-        foreach ($name as $part) {
-            if (!isset($parent[$part])) {
-                if ($value !== null) {
+        if ($value !== null) {
+            foreach ($name as $part) {
+                if (!isset($parent[$part])) {
                     $parent[$part] = array();
-                } else {
+                }
+                $parent = &$parent[$part];
+            }
+        } else {
+            foreach ($name as $part) {
+                if (!isset($parent[$part])) {
                     return null;
                 }
+                $parent = &$parent[$part];
             }
-            $parent = &$parent[$part];
         }
         //now we have a ref, see if we can unset or set it
         if ($unset) {
