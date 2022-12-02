@@ -1,6 +1,11 @@
 # Flatrr
 
 [![Build Status](https://travis-ci.org/jobyone/flatrr.svg?branch=main)](https://travis-ci.org/jobyone/flatrr)
+[![Latest Stable Version](http://poser.pugx.org/byjoby/flatrr/v)](https://packagist.org/packages/byjoby/flatrr)
+[![Total Downloads](http://poser.pugx.org/byjoby/flatrr/downloads)](https://packagist.org/packages/byjoby/flatrr)
+[![Latest Unstable Version](http://poser.pugx.org/byjoby/flatrr/v/unstable)](https://packagist.org/packages/byjoby/flatrr)
+[![License](http://poser.pugx.org/byjoby/flatrr/license)](https://packagist.org/packages/byjoby/flatrr)
+[![PHP Version Require](http://poser.pugx.org/byjoby/flatrr/require/php)](https://packagist.org/packages/byjoby/flatrr)
 
 ## What Flatrr does
 
