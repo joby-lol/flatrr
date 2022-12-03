@@ -8,9 +8,10 @@ use Spyc;
 
 class Config extends SelfReferencingFlatArray implements ConfigInterface
 {
+    /** @var bool */
     public $strict = false;
 
-    public function readDir($dir, string $name = null, bool $overwrite = false)
+    public function readDir(string $dir, string $name = null, bool $overwrite = false): void
     {
         $dir = realpath($dir);
         if (!$dir || !is_dir($dir)) {
@@ -23,7 +24,8 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
         }
     }
 
-    protected function parse(string $input, string $format): array
+    /** @return null|array<mixed|mixed> */
+    protected function parse(string $input, string $format): null|array
     {
         $fn = 'parse_' . $format;
         if (!method_exists($this, $fn)) {
@@ -39,48 +41,53 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
         return array();
     }
 
-    protected function parse_yaml($input)
+    /** @return array<mixed|mixed> */
+    protected function parse_yaml(string $input): array
     {
         return Spyc::YAMLLoadString($input);
     }
 
-    public function json($raw = false): string
+    public function json(bool $raw = false): string
     {
         return json_encode($this->get(null, $raw), JSON_PRETTY_PRINT);
     }
 
-    public function yaml($raw = false): string
+    public function yaml(bool $raw = false): string
     {
         return Spyc::YAMLDump($this->get(null, $raw), 2);
     }
 
-    protected function read_ini($filename)
+    /** @return array<mixed|mixed> */
+    protected function read_ini(string $filename): array
     {
         return parse_ini_file($filename, true);
     }
 
-    protected function read_json($filename)
+    /** @return array<mixed|mixed> */
+    protected function read_json(string $filename): array
     {
         return json_decode(file_get_contents($filename), true);
     }
 
-    protected function read_yaml($filename)
+    /** @return array<mixed|mixed> */
+    protected function read_yaml(string $filename): array
     {
         return Spyc::YAMLLoad($filename);
     }
 
-    protected function read_yml($filename)
+    /** @return array<mixed|mixed> */
+    protected function read_yml(string $filename): array
     {
         return $this->read_yaml($filename);
     }
 
-    public function readFile($filename, string $name = null, bool $overwrite = false)
+    public function readFile(string $filename, string $name = null, bool $overwrite = false): void
     {
         if (!is_file($filename) || !is_readable($filename)) {
             if ($this->strict) {
                 throw new \Exception("Couldn't read config file \"$filename\"");
             } else {
-                return null;
+                return;
             }
         }
         $format = strtolower(preg_replace('/.+\./', '', $filename));
@@ -89,7 +96,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
             if ($this->strict) {
                 throw new \Exception("Don't know how to read the format \"$format\"");
             } else {
-                return null;
+                return;
             }
         }
         $data = $this->$fn($filename);
@@ -97,7 +104,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
             if ($this->strict) {
                 throw new \Exception("Error reading \"" . $filename . "\"");
             } else {
-                return null;
+                return;
             }
         }
         $this->merge($data, $name, $overwrite);

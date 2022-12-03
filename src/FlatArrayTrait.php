@@ -5,70 +5,76 @@ namespace Flatrr;
 
 trait FlatArrayTrait
 {
-    private $_arrayData = array();
-    private $_flattenCache = array();
+    /** @var array<string|mixed> */
+    private $_arrayData = [];
+    /** @var array<string|mixed> */
+    private $_flattenCache = [];
 
-    public function push(?string $name, $value)
+    public function push(null|string $name, mixed $value): static
     {
         $arr = $this->flattenSearch($name);
         if ($arr !== null && !is_array($arr)) {
-            return;
+            return $this;
         }
         if ($arr === null) {
             $arr = [];
         }
         $arr[] = $value;
         $this->set($name, $arr);
+        return $this;
     }
 
-    public function pop(?string $name)
+    public function pop(null|string $name): mixed
     {
         $arr = $this->flattenSearch($name);
         if ($arr !== null && !is_array($arr)) {
-            return;
+            return null;
         }
         $out = array_pop($arr);
         $this->set($name, $arr);
         return $out;
     }
 
-    public function unshift(?string $name, $value)
+    public function unshift(null|string $name, mixed $value): static
     {
         $arr = $this->flattenSearch($name);
         if ($arr !== null && !is_array($arr)) {
-            return;
+            return $this;
         }
         if ($arr === null) {
             $arr = [];
         }
         array_unshift($arr, $value);
         $this->set($name, $arr);
+        return $this;
     }
 
-    public function shift(?string $name)
+    public function shift(null|string $name): mixed
     {
         $arr = $this->flattenSearch($name);
         if ($arr !== null && !is_array($arr)) {
-            return;
+            return null;
         }
         $out = array_shift($arr);
         $this->set($name, $arr);
         return $out;
     }
 
-    public function set(?string $name, $value)
+    public function set(null|string $name, mixed $value): static
     {
-        return $this->flattenSearch($name, $value);
+        $this->flattenSearch($name, $value);
+        return $this;
     }
 
-    public function get(?string $name = null)
+    public function get(null|string $name = null): mixed
     {
         return $this->flattenSearch($name);
     }
 
-    function unset(?string $name)
+    function unset(null|string $name): static
     {
         $this->flattenSearch($name, null, true);
+        return $this;
     }
 
     public function offsetSet($name, $value): void
@@ -120,12 +126,11 @@ trait FlatArrayTrait
      * Recursively set a value, with control over whether existing values or new
      * values take precedence
      */
-    public function merge($value, string $name = null, bool $overwrite = false)
+    public function merge(mixed $value, string $name = null, bool $overwrite = false): static
     {
         if (!isset($this[$name])) {
             //easiest possible outcome, old value doesn't exist, so we can just write the value
             $this->set($name, $value);
-            return;
         } elseif (is_array($value) && is_array($this->flattenSearch($name))) {
             //both new and old values are arrays
             foreach ($value as $k => $v) {
@@ -134,14 +139,13 @@ trait FlatArrayTrait
                 }
                 $this->merge($v, $k, $overwrite);
             }
-            return;
         } else {
             //old and new values exist, and one or both are not arrays, $overwrite rules the day
             if ($overwrite) {
                 $this->set($name, $value);
             }
-            return;
         }
+        return $this;
     }
 
     /**
@@ -149,10 +153,10 @@ trait FlatArrayTrait
      * string. It sets it if $value exists, otherwise it returns the value if it
      * exists.
      */
-    protected function flattenSearch(?string $name, $value = null, $unset = false)
+    protected function flattenSearch(null|string $name, mixed $value = null, bool $unset = false): mixed
     {
         if ($value !== null || $unset) {
-            $this->_flattenCache = array();
+            $this->_flattenCache = [];
         }
         if (!isset($this->_flattenCache[$name])) {
             $this->_flattenCache[$name] = $this->doFlattenSearch($name, $value, $unset);
@@ -160,7 +164,7 @@ trait FlatArrayTrait
         return $this->_flattenCache[$name];
     }
 
-    protected function doFlattenSearch(?string $name, $value = null, $unset = false)
+    protected function doFlattenSearch(null|string $name, mixed $value = null, bool $unset = false): mixed
     {
         //check for home strings
         if ($name == '' || $name === null) {
@@ -178,7 +182,7 @@ trait FlatArrayTrait
         if ($value !== null) {
             foreach ($name as $part) {
                 if (!isset($parent[$part])) {
-                    $parent[$part] = array();
+                    $parent[$part] = [];
                 }
                 $parent = &$parent[$part];
             }
@@ -201,7 +205,7 @@ trait FlatArrayTrait
             } else {
                 //set the hard way
                 if (!is_array($parent)) {
-                    $parent = array();
+                    $parent = [];
                 }
                 $parent[$key] = $value;
             }

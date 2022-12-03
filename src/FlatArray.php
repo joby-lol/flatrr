@@ -6,7 +6,11 @@ class FlatArray implements FlatArrayInterface
 {
     use FlatArrayTrait;
 
-    public function __construct(array $data = null)
+    /**
+     * @param null|array<string|mixed> $data 
+     * @return void 
+     */
+    public function __construct(null|array $data = null)
     {
         $this->merge($data);
     }
