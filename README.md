@@ -1,6 +1,7 @@
 # Flatrr
 
-[![Build Status](https://travis-ci.org/jobyone/flatrr.svg?branch=main)](https://travis-ci.org/jobyone/flatrr)
+[![phpstan](https://github.com/jobyone/flatrr/actions/workflows/phpstan.yml/badge.svg?branch=v1.5)](https://github.com/jobyone/flatrr/actions/workflows/phpstan.yml)
+[![phpunit](https://github.com/jobyone/flatrr/actions/workflows/phpunit.yml/badge.svg?branch=v1.5)](https://github.com/jobyone/flatrr/actions/workflows/phpunit.yml)
 [![Latest Stable Version](http://poser.pugx.org/byjoby/flatrr/v)](https://packagist.org/packages/byjoby/flatrr)
 [![Total Downloads](http://poser.pugx.org/byjoby/flatrr/downloads)](https://packagist.org/packages/byjoby/flatrr)
 [![Latest Unstable Version](http://poser.pugx.org/byjoby/flatrr/v/unstable)](https://packagist.org/packages/byjoby/flatrr)
