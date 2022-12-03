@@ -1,5 +1,5 @@
 <?php
-/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+/* Flatrr | https://github.com/jobyone/flatrr | MIT License */
 namespace Flatrr;
 
 class FlatArray implements FlatArrayInterface

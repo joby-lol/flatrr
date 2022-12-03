@@ -1,5 +1,5 @@
 <?php
-/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+/* Flatrr | https://github.com/jobyone/flatrr | MIT License */
 
 namespace Flatrr;
 
@@ -71,47 +71,47 @@ trait FlatArrayTrait
         $this->flattenSearch($name, null, true);
     }
 
-    public function offsetSet($name, $value)
+    public function offsetSet($name, $value): void
     {
-        return $this->set($name, $value);
+        $this->set($name, $value);
     }
 
-    public function offsetGet($name)
+    public function offsetGet($name): mixed
     {
         return $this->get($name);
     }
 
-    public function offsetExists($name)
+    public function offsetExists($name): bool
     {
         return $this->flattenSearch($name) !== null;
     }
 
-    public function offsetUnset($name)
+    public function offsetUnset($name): void
     {
         $this->unset($name);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
-        return reset($this->_arrayData);
+        reset($this->_arrayData);
     }
 
-    public function current()
+    public function current(): mixed
     {
         return current($this->_arrayData);
     }
 
-    public function next()
+    public function next(): void
     {
-        return next($this->_arrayData);
+        next($this->_arrayData);
     }
 
-    public function key()
+    public function key(): null|string
     {
         return key($this->_arrayData);
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->_arrayData[$this->key()]);
     }

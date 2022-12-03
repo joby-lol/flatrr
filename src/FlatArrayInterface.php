@@ -1,8 +1,16 @@
 <?php
-/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+/* Flatrr | https://github.com/jobyone/flatrr | MIT License */
+
 namespace Flatrr;
 
-interface FlatArrayInterface extends \ArrayAccess, \Iterator
+use ArrayAccess;
+use Iterator;
+
+/** 
+ * @extends ArrayAccess<string|mixed>
+ * @extends Iterator<string|mixed>
+ */
+interface FlatArrayInterface extends ArrayAccess, Iterator
 {
     public function set(?string $name, $value);
     public function get(?string $name = null);

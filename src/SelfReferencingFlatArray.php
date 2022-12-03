@@ -1,5 +1,5 @@
 <?php
-/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+/* Flatrr | https://github.com/jobyone/flatrr | MIT License */
 
 namespace Flatrr;
 
@@ -46,17 +46,7 @@ class SelfReferencingFlatArray extends FlatArray
         return $this->filter(parent::shift($name));
     }
 
-    public function rewind()
-    {
-        return $this->filter(parent::rewind());
-    }
-
-    public function next()
-    {
-        return $this->filter(parent::next());
-    }
-
-    public function current()
+    public function current(): mixed
     {
         return $this->filter(parent::current());
     }
