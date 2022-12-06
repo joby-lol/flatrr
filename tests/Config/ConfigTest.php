@@ -1,6 +1,8 @@
 <?php
 /* Flatrr | https://github.com/jobyone/flatrr | MIT License */
+
 declare(strict_types=1);
+
 namespace Flatrr\Config;
 
 use PHPUnit\Framework\TestCase;
@@ -30,11 +32,11 @@ class ConfigTest extends TestCase
         ];
         //json
         $a = new Config();
-        $a->readFile(__DIR__.'/configtest.json');
+        $a->readFile(__DIR__ . '/configtest.json');
         $this->assertEquals($data, $a->get());
         //yaml
         $a = new Config();
-        $a->readFile(__DIR__.'/configtest.yaml');
+        $a->readFile(__DIR__ . '/configtest.yaml');
         $this->assertEquals($data, $a->get());
     }
 
@@ -51,5 +53,17 @@ class ConfigTest extends TestCase
         $this->assertEquals($data, json_decode($c->json(), true));
         //yaml
         $this->assertEquals($data, Spyc::YAMLLoad($c->yaml()));
+    }
+
+    public function testReadingDirectory()
+    {
+        $config = new Config;
+        $config->readDir(__DIR__ . '/nonexistantdir');
+        $this->assertEquals([], $config->get());
+        $config->readDir(__DIR__ . '/configtestdir');
+        $this->assertEquals('b', $config['ini_file.a']);
+        $this->assertEquals('a', $config['yaml_file']);
+        $this->assertEquals('a', $config['json_file']);
+        $this->assertEquals('a', $config['yml_file']);
     }
 }

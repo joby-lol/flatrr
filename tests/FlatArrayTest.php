@@ -1,6 +1,8 @@
 <?php
 /* Flatrr | https://github.com/jobyone/flatrr | MIT License */
+
 declare(strict_types=1);
+
 namespace Flatrr;
 
 use PHPUnit\Framework\TestCase;
@@ -11,7 +13,7 @@ class FlatArrayTest extends TestCase
     {
         $data = [
             'a' => 'A',
-            'b' => ['c'=>'C']
+            'b' => ['c' => 'C']
         ];
         $a = new FlatArray($data);
         //first level
@@ -21,8 +23,8 @@ class FlatArrayTest extends TestCase
         $this->assertEquals('C', $a['b.c']);
         $this->assertEquals('C', $a->get('b.c'));
         //returning array
-        $this->assertEquals(['c'=>'C'], $a['b']);
-        $this->assertEquals(['c'=>'C'], $a->get('b'));
+        $this->assertEquals(['c' => 'C'], $a['b']);
+        $this->assertEquals(['c' => 'C'], $a->get('b'));
         //returning entire array by requesting null or empty string
         $this->assertEquals($data, $a[null]);
         $this->assertEquals($data, $a->get());
@@ -62,7 +64,7 @@ class FlatArrayTest extends TestCase
     {
         $data = [
             'a' => 'A',
-            'b' => ['c'=>'C']
+            'b' => ['c' => 'C']
         ];
         $a = new FlatArray($data);
         //setting on first layer
@@ -91,7 +93,7 @@ class FlatArrayTest extends TestCase
 
     public function testSettingFalseyValues()
     {
-        $a = new FlatArray(['foo'=>['bar'=>'baz']]);
+        $a = new FlatArray(['foo' => ['bar' => 'baz']]);
         $a['foo.bar'] = false;
         $this->assertFalse($a['foo.bar']);
         $a['foo.bar'] = 0;
@@ -104,21 +106,21 @@ class FlatArrayTest extends TestCase
 
     public function testMerginFalseyValues()
     {
-        $a = new FlatArray(['foo'=>['bar'=>'baz']]);
-        $a->merge(['foo'=>['bar'=>false]], null, true);
+        $a = new FlatArray(['foo' => ['bar' => 'baz']]);
+        $a->merge(['foo' => ['bar' => false]], null, true);
         $this->assertFalse($a['foo.bar']);
-        $a->merge(['foo'=>['bar'=>0]], null, true);
+        $a->merge(['foo' => ['bar' => 0]], null, true);
         $this->assertSame(0, $a['foo.bar']);
-        $a->merge(['foo'=>['bar'=>'']], null, true);
+        $a->merge(['foo' => ['bar' => '']], null, true);
         $this->assertSame('', $a['foo.bar']);
-        $a->merge(['foo'=>['bar'=>[]]], null, true);
+        $a->merge(['foo' => ['bar' => []]], null, true);
         $this->assertSame([], $a['foo.bar']);
     }
 
     public function testCaseSensitivity()
     {
         $h = new FlatArray([
-            'ABC'=>['ABC'=>'ABC']
+            'ABC' => ['ABC' => 'ABC']
         ]);
         $this->assertNull($h['abc.abc']);
         $this->assertNull($h['Abc.aBC']);
@@ -126,7 +128,7 @@ class FlatArrayTest extends TestCase
 
     public function testAccidentalSubstrings()
     {
-        $h = new FlatArray(['foo'=>'bar']);
+        $h = new FlatArray(['foo' => 'bar']);
         $this->assertNull($h['foo.baz']);
     }
 
@@ -169,7 +171,7 @@ class FlatArrayTest extends TestCase
         //overwrite false with mismatched array-ness
         $c = new FlatArray($data);
         $c->merge([
-            'a' => ['b'=>'c'],
+            'a' => ['b' => 'c'],
             'c' => 'd'
         ]);
         $this->assertEquals('b', $c['a']);
@@ -177,7 +179,7 @@ class FlatArrayTest extends TestCase
         //overwrite true with mismatched array-ness
         $c = new FlatArray($data);
         $c->merge([
-            'a' => ['b'=>'c'],
+            'a' => ['b' => 'c'],
             'c' => 'd'
         ], null, true);
         $this->assertEquals('c', $c['a.b']);
@@ -190,8 +192,36 @@ class FlatArrayTest extends TestCase
             'foo.bar' => 'baz'
         ]);
         $this->assertEquals(
-            ['foo'=>['bar'=>'baz']],
+            ['foo' => ['bar' => 'baz']],
             $arr->get()
         );
+    }
+
+    public function testUnset()
+    {
+        $arr = new FlatArray([
+            'a' => [
+                'b' => 'c',
+                'd' => 'e'
+            ]
+        ]);
+        unset($arr['a.b']);
+        $this->assertEquals([
+            'a' => [
+                'd' => 'e'
+            ]
+        ], $arr->get());
+    }
+
+    public function testForeach()
+    {
+        $reference = [
+            'b' => 'c',
+            'd' => 'e'
+        ];
+        $arr = new FlatArray($reference);
+        foreach ($arr as $key => $value) {
+            $this->assertEquals($reference[$key], $value);
+        }
     }
 }
