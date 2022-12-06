@@ -8,7 +8,7 @@
     "email": "joby@byjoby.com"
   }],
   "require-dev": {
-    "phpunit/phpunit": "^7.3"
+    "phpunit/phpunit": "^9.5"
   },
   "autoload": {
     "psr-4": {

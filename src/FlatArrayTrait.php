@@ -28,6 +28,7 @@ trait FlatArrayTrait
             return;
         }
         $out = array_pop($arr);
+        $this->unset($name);
         $this->set($name, $arr);
         return $out;
     }
@@ -52,6 +53,7 @@ trait FlatArrayTrait
             return;
         }
         $out = array_shift($arr);
+        $this->unset($name);
         $this->set($name, $arr);
         return $out;
     }

@@ -1,6 +1,8 @@
 <?php
-/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+/* Flatrr | https://github.com/jobyone/flatrr | MIT License */
+
 declare(strict_types=1);
+
 namespace Flatrr;
 
 use PHPUnit\Framework\TestCase;
@@ -11,7 +13,7 @@ class SelfReferencingFlatArrayTest extends TestCase
     {
         $f = new SelfReferencingFlatArray([
             'foo' => 'bar',
-            'bar' => ['baz'=>'qux'],
+            'bar' => ['baz' => 'qux'],
             'test' => [
                 'foo' => '${foo}',
                 'bar' => '${bar.baz}',
@@ -49,11 +51,13 @@ class SelfReferencingFlatArrayTest extends TestCase
         $this->assertEquals('${foo}', $f['nested.escaped.full']);
         $this->assertEquals('${foo}', $f['nested.escaped.left']);
         $this->assertEquals('${foo}', $f['nested.escaped.right']);
+        //raw
+        $this->assertEquals('${foo}', $f->get('test.foo', true));
     }
 
     public function testSettingFalseyValues()
     {
-        $a = new SelfReferencingFlatArray(['foo'=>['bar'=>'baz']]);
+        $a = new SelfReferencingFlatArray(['foo' => ['bar' => 'baz']]);
         $a['foo.bar'] = false;
         $this->assertFalse($a['foo.bar']);
         $a['foo.bar'] = 0;
@@ -64,16 +68,53 @@ class SelfReferencingFlatArrayTest extends TestCase
         $this->assertSame([], $a['foo.bar']);
     }
 
-    public function testMerginFalseyValues()
+    public function testMergingFalseyValues()
     {
-        $a = new SelfReferencingFlatArray(['foo'=>['bar'=>'baz']]);
-        $a->merge(['foo'=>['bar'=>false]], null, true);
+        $a = new SelfReferencingFlatArray(['foo' => ['bar' => 'baz']]);
+        $a->merge(['foo' => ['bar' => false]], null, true);
         $this->assertFalse($a['foo.bar']);
-        $a->merge(['foo'=>['bar'=>0]], null, true);
+        $a->merge(['foo' => ['bar' => 0]], null, true);
         $this->assertSame(0, $a['foo.bar']);
-        $a->merge(['foo'=>['bar'=>'']], null, true);
+        $a->merge(['foo' => ['bar' => '']], null, true);
         $this->assertSame('', $a['foo.bar']);
-        $a->merge(['foo'=>['bar'=>[]]], null, true);
+        $a->merge(['foo' => ['bar' => []]], null, true);
         $this->assertSame([], $a['foo.bar']);
+    }
+
+    public function testForeach()
+    {
+        $reference = [
+            'a' => 'b',
+            'b' => '${a}',
+            'd' => '${b}'
+        ];
+        $arr = new SelfReferencingFlatArray($reference);
+        foreach ($arr as $key => $value) {
+            $this->assertEquals('b', $value);
+        }
+    }
+
+    public function testPop()
+    {
+        $f = new SelfReferencingFlatArray([
+            'a' => 'b',
+            'c' => [
+                '${a}'
+            ]
+        ]);
+        $this->assertEquals('b', $f->pop('c'));
+        $this->assertNull($f->pop('c'));
+    }
+
+    public function testShift()
+    {
+        $f = new SelfReferencingFlatArray([
+            'a' => 'b',
+            'c' => [
+                '${a}'
+            ]
+        ]);
+        $this->assertEquals('b', $f->shift('c'));
+        $this->assertNull($f->shift('c'));
     }
 }
