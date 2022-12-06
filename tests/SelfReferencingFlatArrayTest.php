@@ -80,4 +80,41 @@ class SelfReferencingFlatArrayTest extends TestCase
         $a->merge(['foo' => ['bar' => []]], null, true);
         $this->assertSame([], $a['foo.bar']);
     }
+
+    public function testForeach()
+    {
+        $reference = [
+            'a' => 'b',
+            'b' => '${a}',
+            'd' => '${b}'
+        ];
+        $arr = new SelfReferencingFlatArray($reference);
+        foreach ($arr as $key => $value) {
+            $this->assertEquals('b', $value);
+        }
+    }
+
+    public function testPop()
+    {
+        $f = new SelfReferencingFlatArray([
+            'a' => 'b',
+            'c' => [
+                '${a}'
+            ]
+        ]);
+        $this->assertEquals('b', $f->pop('c'));
+        $this->assertNull($f->pop('c'));
+    }
+
+    public function testShift()
+    {
+        $f = new SelfReferencingFlatArray([
+            'a' => 'b',
+            'c' => [
+                '${a}'
+            ]
+        ]);
+        $this->assertEquals('b', $f->shift('c'));
+        $this->assertNull($f->shift('c'));
+    }
 }

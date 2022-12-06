@@ -6,9 +6,9 @@ namespace Flatrr;
 trait FlatArrayTrait
 {
     /** @var array<string|mixed> */
-    private $_arrayData = [];
+    protected $_arrayData = [];
     /** @var array<string|mixed> */
-    private $_flattenCache = [];
+    protected $_flattenCache = [];
 
     public function push(null|string $name, mixed $value): static
     {
@@ -31,6 +31,7 @@ trait FlatArrayTrait
             return null;
         }
         $out = array_pop($arr);
+        $this->unset($name);
         $this->set($name, $arr);
         return $out;
     }
@@ -56,6 +57,7 @@ trait FlatArrayTrait
             return null;
         }
         $out = array_shift($arr);
+        $this->unset($name);
         $this->set($name, $arr);
         return $out;
     }
@@ -204,9 +206,7 @@ trait FlatArrayTrait
                 $parent[$key] = array_replace_recursive($parent[$key], $value);
             } else {
                 //set the hard way
-                if (!is_array($parent)) {
-                    $parent = [];
-                }
+                if (!is_array($parent)) $parent = [];
                 $parent[$key] = $value;
             }
             return null;

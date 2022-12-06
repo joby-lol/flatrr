@@ -186,6 +186,70 @@ class FlatArrayTest extends TestCase
         $this->assertEquals('d', $c['c']);
     }
 
+    public function testMergeViaSet()
+    {
+        $arr = new FlatArray([
+            'a' => [
+                'a' => 'b',
+                'c' => 'd'
+            ]
+        ]);
+        $arr->set('a', [
+            'e' => 'f',
+            'g' => 'h'
+        ]);
+        $this->assertEquals(
+            [
+                'a' => [
+                    'a' => 'b',
+                    'c' => 'd',
+                    'e' => 'f',
+                    'g' => 'h'
+                ]
+            ],
+            $arr->get()
+        );
+    }
+
+    public function testNoMergeRootViaSet()
+    {
+        $arr = new FlatArray([
+            'a' => 'b',
+            'c' => 'd'
+        ]);
+        $arr->set(null, [
+            'e' => 'f',
+            'g' => 'h'
+        ]);
+        $this->assertEquals(
+            [
+                'e' => 'f',
+                'g' => 'h'
+            ],
+            $arr->get()
+        );
+    }
+
+    public function testMergeViaSetOverNonArray()
+    {
+        $arr = new FlatArray([
+            'a' => 'b'
+        ]);
+        $arr->set('a', [
+            'e' => 'f',
+            'g' => 'h'
+        ]);
+        $this->assertEquals(
+            [
+                'a' => [
+                    'e' => 'f',
+                    'g' => 'h'
+                ]
+            ],
+            $arr->get()
+        );
+    }
+
     public function testConstructionUnflattening()
     {
         $arr = new FlatArray([
@@ -211,6 +275,9 @@ class FlatArrayTest extends TestCase
                 'd' => 'e'
             ]
         ], $arr->get());
+        // unset root
+        $arr->unset(null);
+        $this->assertEquals([], $arr->get());
     }
 
     public function testForeach()

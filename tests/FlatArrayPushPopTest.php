@@ -19,6 +19,7 @@ class FlatArrayPushPopTest extends TestCase
         $this->assertEquals(['foo'], $f->get());
         $this->assertEquals('foo', $f->pop(null));
         $this->assertEquals([], $f->get());
+        $this->assertNull($f->pop(null));
     }
 
     public function testPushIndexCreation()
