@@ -1,4 +1,5 @@
 <?php
+
 /* Flatrr | https://github.com/jobyone/flatrr | MIT License */
 
 namespace Flatrr\Config;
@@ -8,22 +9,25 @@ use Spyc;
 
 class Config extends SelfReferencingFlatArray implements ConfigInterface
 {
-    public function readDir(string $dir, string $name = null, bool $overwrite = false): void
+    public function readDir(string $dir, string $name = null, bool $overwrite = false): static
     {
         $dir = realpath($dir);
-        if (!$dir || !is_dir($dir)) {
-            return;
-        }
-        foreach (glob("$dir/*") as $f) {
-            if (is_file($f)) {
-                $this->readFile($f, $name, $overwrite);
+        if ($dir && is_dir($dir)) {
+            $glob = glob("$dir/*");
+            if ($glob) {
+                foreach ($glob as $f) {
+                    if (is_file($f)) {
+                        $this->readFile($f, $name, $overwrite);
+                    }
+                }
             }
         }
+        return $this;
     }
 
     public function json(bool $raw = false): string
     {
-        return json_encode($this->get(null, $raw), JSON_PRETTY_PRINT);
+        return json_encode($this->get(null, $raw), JSON_PRETTY_PRINT); // @phpstan-ignore-line
     }
 
     public function yaml(bool $raw = false): string
@@ -32,7 +36,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
     }
 
     /** @return array<mixed|mixed> */
-    protected function read_ini(string $filename): array
+    protected function read_ini(string $filename): false|array
     {
         return parse_ini_file($filename, true);
     }
@@ -40,7 +44,9 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
     /** @return array<mixed|mixed> */
     protected function read_json(string $filename): null|array
     {
-        return json_decode(file_get_contents($filename), true);
+        /** @var string */
+        $data = file_get_contents($filename);
+        return json_decode($data, true);
     }
 
     /** @return array<mixed|mixed> */
@@ -55,14 +61,16 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
         return $this->read_yaml($filename);
     }
 
-    public function readFile(string $filename, string $name = null, bool $overwrite = false): void
+    public function readFile(string $filename, string $name = null, bool $overwrite = false): static
     {
-        if (!is_file($filename) || !is_readable($filename)) return;
         $format = strtolower(preg_replace('/.+\./', '', $filename));
         $fn = 'read_' . $format;
-        if (!method_exists($this, $fn)) return;
-        $data = $this->$fn($filename);
-        if ($data === null) return;
-        $this->merge($data, $name, $overwrite);
+        if (is_file($filename) && is_readable($filename) && method_exists($this, $fn)) {
+            $data = $this->$fn($filename);
+            if ($data !== null) {
+                $this->merge($data, $name, $overwrite);
+            }
+        }
+        return $this;
     }
 }

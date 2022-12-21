@@ -1,4 +1,5 @@
 <?php
+
 /* Flatrr | https://github.com/jobyone/flatrr | MIT License */
 
 namespace Flatrr;
@@ -73,7 +74,7 @@ trait FlatArrayTrait
         return $this->flattenSearch($name);
     }
 
-    function unset(null|string $name): static
+    public function unset(null|string $name): static
     {
         $this->flattenSearch($name, null, true);
         return $this;
@@ -114,7 +115,7 @@ trait FlatArrayTrait
         next($this->_arrayData);
     }
 
-    public function key(): null|string
+    public function key(): null|string|int
     {
         return key($this->_arrayData);
     }
@@ -205,8 +206,10 @@ trait FlatArrayTrait
                 //both value and destination are arrays, merge them
                 $parent[$key] = array_replace_recursive($parent[$key], $value);
             } else {
-                //set the hard way
-                if (!is_array($parent)) $parent = [];
+                //destination is not an array, to set this we must overwrite it with an empty array
+                if (!is_array(@$parent[$key])) {
+                    $parent[$key] = [];
+                }
                 $parent[$key] = $value;
             }
             return null;

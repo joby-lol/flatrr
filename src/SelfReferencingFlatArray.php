@@ -1,4 +1,5 @@
 <?php
+
 /* Flatrr | https://github.com/jobyone/flatrr | MIT License */
 
 namespace Flatrr;
@@ -97,8 +98,8 @@ class SelfReferencingFlatArray extends FlatArray
     }
 
     /**
-     * @param array<int,null|string> $matches 
-     * @return string 
+     * @param array<int,null|string> $matches
+     * @return string
      */
     protected function filter_regex(array $matches): string
     {

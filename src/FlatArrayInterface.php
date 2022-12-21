@@ -1,4 +1,5 @@
 <?php
+
 /* Flatrr | https://github.com/jobyone/flatrr | MIT License */
 
 namespace Flatrr;
@@ -6,7 +7,7 @@ namespace Flatrr;
 use ArrayAccess;
 use Iterator;
 
-/** 
+/**
  * @extends ArrayAccess<string,mixed>
  * @extends Iterator<string,mixed>
  */

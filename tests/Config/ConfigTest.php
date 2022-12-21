@@ -38,6 +38,11 @@ class ConfigTest extends TestCase
         $a = new Config();
         $a->readFile(__DIR__ . '/configtest.yaml');
         $this->assertEquals($data, $a->get());
+        //nonexistant files
+        $a = new Config();
+        $a->readFile(__DIR__ . '/does-not-exist.json');
+        $a->readFile(__DIR__ . '/does-not-exist.yaml');
+        $this->assertEquals([], $a->get());
     }
 
     public function testSerializing()
