@@ -1,5 +1,6 @@
 <?php
-/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+
+/* Flatrr | https://github.com/jobyone/flatrr | MIT License */
 
 namespace Flatrr\Config;
 
@@ -8,98 +9,68 @@ use Spyc;
 
 class Config extends SelfReferencingFlatArray implements ConfigInterface
 {
-    public $strict = false;
-
-    public function readDir($dir, string $name = null, bool $overwrite = false)
+    public function readDir(string $dir, string $name = null, bool $overwrite = false): static
     {
         $dir = realpath($dir);
-        if (!$dir || !is_dir($dir)) {
-            return;
-        }
-        foreach (glob("$dir/*") as $f) {
-            if (is_file($f)) {
-                $this->readFile($f, $name, $overwrite);
+        if ($dir && is_dir($dir)) {
+            $glob = glob("$dir/*");
+            if ($glob) {
+                foreach ($glob as $f) {
+                    if (is_file($f)) {
+                        $this->readFile($f, $name, $overwrite);
+                    }
+                }
             }
         }
+        return $this;
     }
 
-    protected function parse(string $input, string $format): array
+    public function json(bool $raw = false): string
     {
-        $fn = 'parse_' . $format;
-        if (!method_exists($this, $fn)) {
-            if ($this->strict) {
-                throw new \Exception("Don't know how to parse the format \"$format\"");
-            } else {
-                return null;
-            }
-        }
-        if ($out = $this->$fn($input)) {
-            return $out;
-        }
-        return array();
+        return json_encode($this->get(null, $raw), JSON_PRETTY_PRINT); // @phpstan-ignore-line
     }
 
-    protected function parse_yaml($input)
-    {
-        return Spyc::YAMLLoadString($input);
-    }
-
-    public function json($raw = false): string
-    {
-        return json_encode($this->get(null, $raw), JSON_PRETTY_PRINT);
-    }
-
-    public function yaml($raw = false): string
+    public function yaml(bool $raw = false): string
     {
         return Spyc::YAMLDump($this->get(null, $raw), 2);
     }
 
-    protected function read_ini($filename)
+    /** @return array<mixed|mixed> */
+    protected function read_ini(string $filename): false|array
     {
         return parse_ini_file($filename, true);
     }
 
-    protected function read_json($filename)
+    /** @return array<mixed|mixed> */
+    protected function read_json(string $filename): null|array
     {
-        return json_decode(file_get_contents($filename), true);
+        /** @var string */
+        $data = file_get_contents($filename);
+        return json_decode($data, true);
     }
 
-    protected function read_yaml($filename)
+    /** @return array<mixed|mixed> */
+    protected function read_yaml(string $filename): array
     {
         return Spyc::YAMLLoad($filename);
     }
 
-    protected function read_yml($filename)
+    /** @return array<mixed|mixed> */
+    protected function read_yml(string $filename): array
     {
         return $this->read_yaml($filename);
     }
 
-    public function readFile($filename, string $name = null, bool $overwrite = false)
+    public function readFile(string $filename, string $name = null, bool $overwrite = false): static
     {
-        if (!is_file($filename) || !is_readable($filename)) {
-            if ($this->strict) {
-                throw new \Exception("Couldn't read config file \"$filename\"");
-            } else {
-                return null;
-            }
-        }
         $format = strtolower(preg_replace('/.+\./', '', $filename));
         $fn = 'read_' . $format;
-        if (!method_exists($this, $fn)) {
-            if ($this->strict) {
-                throw new \Exception("Don't know how to read the format \"$format\"");
-            } else {
-                return null;
+        if (is_file($filename) && is_readable($filename) && method_exists($this, $fn)) {
+            $data = $this->$fn($filename);
+            if ($data !== null) {
+                $this->merge($data, $name, $overwrite);
             }
         }
-        $data = $this->$fn($filename);
-        if (!$data) {
-            if ($this->strict) {
-                throw new \Exception("Error reading \"" . $filename . "\"");
-            } else {
-                return null;
-            }
-        }
-        $this->merge($data, $name, $overwrite);
+        return $this;
     }
 }

@@ -1,12 +1,17 @@
 <?php
-/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+
+/* Flatrr | https://github.com/jobyone/flatrr | MIT License */
+
 namespace Flatrr\Config;
 
-interface ConfigInterface extends \ArrayAccess
+use Flatrr\FlatArrayInterface;
+
+interface ConfigInterface extends FlatArrayInterface
 {
-    public function readFile($filename, string $name = null, bool $overwrite = false);
-    public function json($raw = false) : string;
-    public function yaml($raw = false) : string;
-    public function get(string $name = null, bool $raw = false);
-    public function merge($value, string $name = null, bool $overwrite = false);
+    public function readDir(string $dir, string $name = null, bool $overwrite = false): static;
+    public function readFile(string $filename, string $name = null, bool $overwrite = false): static;
+    public function json(bool $raw = false): string;
+    public function yaml(bool $raw = false): string;
+    public function get(null|string $name = null, bool $raw = false): mixed;
+    public function merge(mixed $value, string $name = null, bool $overwrite = false): static;
 }

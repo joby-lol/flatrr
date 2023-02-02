@@ -1,13 +1,15 @@
 <?php
-/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+
+/* Flatrr | https://github.com/jobyone/flatrr | MIT License */
 
 namespace Flatrr;
 
 class SelfReferencingFlatArray extends FlatArray
 {
+    /** @var array<string,string> */
     protected $cache = [];
 
-    public function get(string $name = null, bool $raw = false, $unescape = true)
+    public function get(string $name = null, bool $raw = false, bool $unescape = true): mixed
     {
         $out = parent::get($name);
         if ($raw) {
@@ -20,48 +22,29 @@ class SelfReferencingFlatArray extends FlatArray
         return $out;
     }
 
-    public function set(?string $name, $value)
+    public function set(null|string $name, mixed $value): static
     {
         $this->cache = [];
-        return $this->filter(parent::set($name, $value));
+        $this->filter(parent::set($name, $value));
+        return $this;
     }
 
-    public function push(?string $name, $value)
-    {
-        return $this->filter(parent::push($name, $value));
-    }
-
-    public function pop(?string $name)
+    public function pop(null|string $name): mixed
     {
         return $this->filter(parent::pop($name));
     }
 
-    public function unshift(?string $name, $value)
-    {
-        return $this->filter(parent::unshift($name, $value));
-    }
-
-    public function shift(?string $name)
+    public function shift(null|string $name): mixed
     {
         return $this->filter(parent::shift($name));
     }
 
-    public function rewind()
-    {
-        return $this->filter(parent::rewind());
-    }
-
-    public function next()
-    {
-        return $this->filter(parent::next());
-    }
-
-    public function current()
+    public function current(): mixed
     {
         return $this->filter(parent::current());
     }
 
-    protected function unescape($value)
+    protected function unescape(mixed $value): mixed
     {
         //map this function onto array values
         if (is_array($value)) {
@@ -88,7 +71,7 @@ class SelfReferencingFlatArray extends FlatArray
     /**
      * Recursively replace ${var/name} type strings in string values with
      */
-    protected function filter($value)
+    protected function filter(mixed $value): mixed
     {
         //map this function onto array values
         if (is_array($value)) {
@@ -114,9 +97,14 @@ class SelfReferencingFlatArray extends FlatArray
         return $value;
     }
 
-    protected function filter_regex($matches)
+    /**
+     * @param array<int,null|string> $matches
+     * @return string
+     */
+    protected function filter_regex(array $matches): string
     {
-        if (null !== $value = $this->get($matches[1], false, false)) {
+        $value = $this->get($matches[1], false, false);
+        if ($value !== null) {
             if (!is_array($value)) {
                 return $value;
             }

@@ -1,16 +1,25 @@
 <?php
-/* Flatrr | https://gitlab.com/byjoby/flatrr | MIT License */
+
+/* Flatrr | https://github.com/jobyone/flatrr | MIT License */
+
 namespace Flatrr;
 
-interface FlatArrayInterface extends \ArrayAccess, \Iterator
-{
-    public function set(?string $name, $value);
-    public function get(?string $name = null);
-    public function unset(?string $name);
-    public function merge($value, string $name = null, bool $overwrite = false);
+use ArrayAccess;
+use Iterator;
 
-    public function push(?string $name, $value);
-    public function pop(?string $name);
-    public function unshift(?string $name, $value);
-    public function shift(?string $name);
+/**
+ * @extends ArrayAccess<string,mixed>
+ * @extends Iterator<string,mixed>
+ */
+interface FlatArrayInterface extends ArrayAccess, Iterator
+{
+    public function set(null|string $name, mixed $value): mixed;
+    public function get(null|string $name = null): mixed;
+    public function unset(null|string $name): static;
+    public function merge(mixed $value, string $name = null, bool $overwrite = false): static;
+
+    public function push(null|string $name, mixed $value): static;
+    public function pop(null|string $name): mixed;
+    public function unshift(null|string $name, mixed $value): static;
+    public function shift(null|string $name): mixed;
 }
