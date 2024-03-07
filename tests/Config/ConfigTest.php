@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace Flatrr\Config;
 
 use PHPUnit\Framework\TestCase;
-use Spyc;
+use Symfony\Component\Yaml\Yaml;
 
 class ConfigTest extends TestCase
 {
@@ -57,7 +57,7 @@ class ConfigTest extends TestCase
         //json
         $this->assertEquals($data, json_decode($c->json(), true));
         //yaml
-        $this->assertEquals($data, Spyc::YAMLLoad($c->yaml()));
+        $this->assertEquals($data, Yaml::parse($c->yaml()));
     }
 
     public function testReadingDirectory()

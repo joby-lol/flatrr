@@ -5,7 +5,7 @@
 namespace Flatrr\Config;
 
 use Flatrr\SelfReferencingFlatArray;
-use Spyc;
+use Symfony\Component\Yaml\Yaml;
 
 class Config extends SelfReferencingFlatArray implements ConfigInterface
 {
@@ -32,7 +32,12 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
 
     public function yaml(bool $raw = false): string
     {
-        return Spyc::YAMLDump($this->get(null, $raw), 2);
+        return Yaml::dump(
+            $this->get(null, $raw),
+            2,
+            2,
+            Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
+        );
     }
 
     /** @return array<mixed|mixed> */
@@ -52,7 +57,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
     /** @return array<mixed|mixed> */
     protected function read_yaml(string $filename): array
     {
-        return Spyc::YAMLLoad($filename);
+        return Yaml::parseFile($filename);
     }
 
     /** @return array<mixed|mixed> */
