@@ -9,7 +9,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class Config extends SelfReferencingFlatArray implements ConfigInterface
 {
-    public function readDir(string $dir, string $name = null, bool $overwrite = false): static
+
+    public function readDir(string $dir, string|null $name = null, bool $overwrite = false): static
     {
         $dir = realpath($dir);
         if ($dir && is_dir($dir)) {
@@ -66,7 +67,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
         return $this->read_yaml($filename);
     }
 
-    public function readFile(string $filename, string $name = null, bool $overwrite = false): static
+    public function readFile(string $filename, string|null $name = null, bool $overwrite = false): static
     {
         $format = strtolower(preg_replace('/.+\./', '', $filename));
         $fn = 'read_' . $format;

@@ -129,7 +129,7 @@ trait FlatArrayTrait
      * Recursively set a value, with control over whether existing values or new
      * values take precedence
      */
-    public function merge(mixed $value, string $name = null, bool $overwrite = false): static
+    public function merge(mixed $value, string|null $name = null, bool $overwrite = false): static
     {
         if (!isset($this[$name])) {
             //easiest possible outcome, old value doesn't exist, so we can just write the value
@@ -170,7 +170,7 @@ trait FlatArrayTrait
     protected function doFlattenSearch(null|string $name, mixed $value = null, bool $unset = false): mixed
     {
         //check for home strings
-        if ($name == '' || $name === null) {
+        if ($name === '' || $name === null) {
             if ($unset) {
                 $this->_arrayData = [];
             } elseif ($value !== null) {

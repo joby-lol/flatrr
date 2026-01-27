@@ -16,7 +16,8 @@ interface FlatArrayInterface extends ArrayAccess, Iterator
     public function set(null|string $name, mixed $value): mixed;
     public function get(null|string $name = null): mixed;
     public function unset(null|string $name): static;
-    public function merge(mixed $value, string $name = null, bool $overwrite = false): static;
+
+    public function merge(mixed $value, string|null $name = null, bool $overwrite = false): static;
 
     public function push(null|string $name, mixed $value): static;
     public function pop(null|string $name): mixed;

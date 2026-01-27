@@ -9,7 +9,7 @@ class SelfReferencingFlatArray extends FlatArray
     /** @var array<string,string> */
     protected $cache = [];
 
-    public function get(string $name = null, bool $raw = false, bool $unescape = true): mixed
+    public function get(string|null $name = null, bool $raw = false, bool $unescape = true): mixed
     {
         $out = parent::get($name);
         if ($raw) {
