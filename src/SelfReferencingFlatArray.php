@@ -6,7 +6,8 @@ namespace Flatrr;
 
 class SelfReferencingFlatArray extends FlatArray
 {
-    /** @var array<string,string> */
+
+    /** @var array<string,string|null> */
     protected $cache = [];
 
     public function get(string|null $name = null, bool $raw = false, bool $unescape = true): mixed
@@ -50,7 +51,7 @@ class SelfReferencingFlatArray extends FlatArray
         if (is_array($value)) {
             return array_map(
                 [$this, 'unescape'],
-                $value
+                $value,
             );
         }
         //search/replace on string values
@@ -59,7 +60,7 @@ class SelfReferencingFlatArray extends FlatArray
             $value = preg_replace(
                 '/\$\\\?\{([^\}\\\]+)\\\?\}/S',
                 '\${$1}',
-                $value
+                $value,
             );
             //return
             return $value;
@@ -77,21 +78,23 @@ class SelfReferencingFlatArray extends FlatArray
         if (is_array($value)) {
             return array_map(
                 [$this, 'filter'],
-                $value
+                $value,
             );
         }
         //search/replace on string values
         if (is_string($value) && strpos($value, '${') !== false) {
             //search for valid replacements
-            return $this->cache[$value] ??
-                ($this->cache[$value] = preg_replace_callback(
+            if (array_key_exists($value, $this->cache))
+                return $this->cache[$value];
+            else
+                return $this->cache[$value] = preg_replace_callback(
                     //search for things like ${var/name}, escape with \ before last brace
                     '/\$\{([^\}]*[^\.\\\])\}/',
                     //replace match with value from $this if it exists
                     [$this, 'filter_regex'],
                     //applied to $value
-                    $value
-                ));
+                    $value,
+                );
         }
         //fall back to just returning value, it's some other datatype
         return $value;
@@ -105,10 +108,11 @@ class SelfReferencingFlatArray extends FlatArray
     {
         $value = $this->get($matches[1], false, false);
         if ($value !== null) {
-            if (!is_array($value)) {
-                return $value;
+            if (!is_array($value) && is_scalar($value)) {
+                return (string) $value;
             }
         }
-        return $matches[0];
+        return $matches[0] ?? '';
     }
+
 }

@@ -6,8 +6,10 @@ namespace Flatrr;
 
 trait FlatArrayTrait
 {
+
     /** @var array<string|mixed> */
     protected $_arrayData = [];
+
     /** @var array<string|mixed> */
     protected $_flattenCache = [];
 
@@ -28,9 +30,10 @@ trait FlatArrayTrait
     public function pop(null|string $name): mixed
     {
         $arr = $this->flattenSearch($name);
-        if ($arr !== null && !is_array($arr)) {
+        if ($arr !== null && !is_array($arr))
             return null;
-        }
+        if (!is_array($arr))
+            return null;
         $out = array_pop($arr);
         $this->unset($name);
         $this->set($name, $arr);
@@ -54,9 +57,10 @@ trait FlatArrayTrait
     public function shift(null|string $name): mixed
     {
         $arr = $this->flattenSearch($name);
-        if ($arr !== null && !is_array($arr)) {
+        if ($arr !== null && !is_array($arr))
             return null;
-        }
+        if (!is_array($arr))
+            return null;
         $out = array_shift($arr);
         $this->unset($name);
         $this->set($name, $arr);
@@ -134,7 +138,8 @@ trait FlatArrayTrait
         if (!isset($this[$name])) {
             //easiest possible outcome, old value doesn't exist, so we can just write the value
             $this->set($name, $value);
-        } elseif (is_array($value) && is_array($this->flattenSearch($name))) {
+        }
+        elseif (is_array($value) && is_array($this->flattenSearch($name))) {
             //both new and old values are arrays
             foreach ($value as $k => $v) {
                 if ($name) {
@@ -142,7 +147,8 @@ trait FlatArrayTrait
                 }
                 $this->merge($v, $k, $overwrite);
             }
-        } else {
+        }
+        else {
             //old and new values exist, and one or both are not arrays, $overwrite rules the day
             if ($overwrite) {
                 $this->set($name, $value);
@@ -173,13 +179,15 @@ trait FlatArrayTrait
         if ($name === '' || $name === null) {
             if ($unset) {
                 $this->_arrayData = [];
-            } elseif ($value !== null) {
+            }
+            elseif (is_array($value)) {
                 $this->_arrayData = $value;
             }
             return $this->_arrayData;
         }
         //build a reference to where this name should be
         $parent = &$this->_arrayData;
+        assert(is_array($parent));
         $name = explode('.', $name);
         $key = array_pop($name);
         if ($value !== null) {
@@ -189,7 +197,8 @@ trait FlatArrayTrait
                 }
                 $parent = &$parent[$part];
             }
-        } else {
+        }
+        else {
             foreach ($name as $part) {
                 if (!isset($parent[$part])) {
                     return null;
@@ -201,11 +210,13 @@ trait FlatArrayTrait
         if ($unset) {
             unset($parent[$key]);
             return null;
-        } elseif ($value !== null) {
+        }
+        elseif ($value !== null) {
             if (is_array(@$parent[$key]) && is_array($value)) {
                 //both value and destination are arrays, merge them
                 $parent[$key] = array_replace_recursive($parent[$key], $value);
-            } else {
+            }
+            else {
                 //destination is not an array, to set this we must overwrite it with an empty array
                 if (!is_array(@$parent[$key])) {
                     $parent[$key] = [];
@@ -220,4 +231,5 @@ trait FlatArrayTrait
         }
         return @$parent[$key];
     }
+
 }

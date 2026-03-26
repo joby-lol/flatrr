@@ -37,7 +37,7 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
             $this->get(null, $raw),
             2,
             2,
-            Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
+            Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK,
         );
     }
 
@@ -52,12 +52,14 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
     {
         /** @var string */
         $data = file_get_contents($filename);
+        // @phpstan-ignore-next-line throwing a type error if this fails is fine and good
         return json_decode($data, true);
     }
 
     /** @return array<mixed|mixed> */
     protected function read_yaml(string $filename): array
     {
+        // @phpstan-ignore-next-line throwing a type error if this fails is fine and good
         return Yaml::parseFile($filename);
     }
 
@@ -69,7 +71,10 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
 
     public function readFile(string $filename, string|null $name = null, bool $overwrite = false): static
     {
-        $format = strtolower(preg_replace('/.+\./', '', $filename));
+        $format = preg_replace('/.+\./', '', $filename);
+        if (!$format)
+            return $this;
+        $format = strtolower($format);
         $fn = 'read_' . $format;
         if (is_file($filename) && is_readable($filename) && method_exists($this, $fn)) {
             $data = $this->$fn($filename);
@@ -79,4 +84,5 @@ class Config extends SelfReferencingFlatArray implements ConfigInterface
         }
         return $this;
     }
+
 }
