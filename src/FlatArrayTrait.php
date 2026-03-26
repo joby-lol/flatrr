@@ -164,6 +164,7 @@ trait FlatArrayTrait
      */
     protected function flattenSearch(null|string $name, mixed $value = null, bool $unset = false): mixed
     {
+        $name ??= '';
         if ($value !== null || $unset) {
             $this->_flattenCache = [];
         }
@@ -212,13 +213,13 @@ trait FlatArrayTrait
             return null;
         }
         elseif ($value !== null) {
-            if (is_array(@$parent[$key]) && is_array($value)) {
+            if (array_key_exists($key, $parent) && is_array($parent[$key]) && is_array($value)) {
                 //both value and destination are arrays, merge them
                 $parent[$key] = array_replace_recursive($parent[$key], $value);
             }
             else {
                 //destination is not an array, to set this we must overwrite it with an empty array
-                if (!is_array(@$parent[$key])) {
+                if (array_key_exists($key, $parent) && !is_array($parent[$key])) {
                     $parent[$key] = [];
                 }
                 $parent[$key] = $value;
@@ -229,7 +230,9 @@ trait FlatArrayTrait
         if (!is_array($parent)) {
             return null;
         }
-        return @$parent[$key];
+        return array_key_exists($key, $parent)
+            ? $parent[$key]
+            : null;
     }
 
 }
