@@ -126,6 +126,8 @@ trait FlatArrayTrait
 
     public function valid(): bool
     {
+        if ($this->key() === null)
+            return false;
         return isset($this->_arrayData[$this->key()]);
     }
 
